@@ -1,10 +1,14 @@
 # OpenSearch KNN Hammer
 
 ## Overview
-This tool is used to generate load on an OpenSearch cluster for the k-NN plugin.
+Simple tool to ingest random data and run random queries into OpenSearch for the k-NN plugin
 
-It has a couple functions:
-1. Create index with specified mapping
-2. Index X random vectors of dimension D
-3. Run X searches on an index
-4. Train an index 
+## Ingest
+```
+python3 hammer.py {URL} ingest {INDEX_NAME} {FIELD_NAME} {DIMENSION} {NUMBER_OF_VECTORS}
+```
+
+## Search
+```
+python3 hammer.py {URL} search {INDEX_NAME} {FIELD_NAME} {DIMENSION} {K} {SIZE} {NUMBER_OF_QUERIES}
+```
