@@ -8,7 +8,18 @@ from opensearchpy import OpenSearch, RequestsHttpConnection
 import random
 
 
-def get_connection(url):
+def get_connection(url, security=False):
+    if security:
+        return OpenSearch(
+            hosts=[{'host': url, 'port': 80}],
+            use_ssl=False,
+            verify_certs=False,
+            http_auth=('admin', 'admin'),
+            scheme="http",
+            port=80,
+            connection_class=RequestsHttpConnection
+        )
+
     return OpenSearch(
         hosts=[{'host': url, 'port': 80}],
         use_ssl=False,
@@ -68,23 +79,27 @@ def run_queries(osearch, index_name, field_name, k, size, num_queries, dimension
 
 def main(argv):
     url = argv[1]
-    case = argv[2]
+    security_enabled = True if argv[2] == "true" else False
+    case = argv[3]
+
+
+    print
 
     print("Testing: ", url)
-    osearch = get_connection(url)
+    osearch = get_connection(url, security_enabled)
     if case == "ingest":
-        index_name = argv[3]
-        field_name = argv[4]
-        dimension = int(argv[5])
-        doc_count = int(argv[6])
+        index_name = argv[4]
+        field_name = argv[5]
+        dimension = int(argv[6])
+        doc_count = int(argv[7])
         bulk_ingest_random_data(osearch, index_name, field_name, doc_count, 300, dimension)
     elif case == "search":
-        index_name = argv[3]
-        field_name = argv[4]
-        dimension = int(argv[5])
-        k = int(argv[6])
-        size = int(argv[7])
-        num_queries = int(argv[8])
+        index_name = argv[4]
+        field_name = argv[5]
+        dimension = int(argv[6])
+        k = int(argv[7])
+        size = int(argv[8])
+        num_queries = int(argv[9])
         run_queries(osearch, index_name, field_name, k, size, num_queries, dimension)
 
 
